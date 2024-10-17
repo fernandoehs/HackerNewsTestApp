@@ -1,10 +1,9 @@
 package com.fernandoherrera.hackernewstestapp.data.model.local
 
 import androidx.room.Entity
-import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "hitEntity", indices = [Index(value = ["storyTitle"], unique = true)])
+@Entity(tableName = "hitEntity")
 data class HitEntity(
     @PrimaryKey
     val objectId: String,

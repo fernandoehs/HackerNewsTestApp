@@ -6,7 +6,6 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-//import com.fernandoherrera.presentation.navigation.NavRoutes
 import com.fernandoherrera.hackernewstestapp.presentation.ui.DetailScreen
 import com.fernandoherrera.hackernewstestapp.presentation.ui.MainScreen
 

@@ -15,11 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-//import com.fernandoherrera.hackernewstestapp.domain.model.Hit
-import com.fernandoherrera.hackernewstestapp.data.model.remote.HitResponse
 import com.fernandoherrera.hackernewstestapp.domain.model.Hit
-
-//import com.fernandoherrera.hackernewstestapp.data.model.remote.HitResponse
 
 @Composable
 fun NewsItem(article: Hit, onClick: () -> Unit) {

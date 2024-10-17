@@ -1,9 +1,9 @@
 package com.fernandoherrera.hackernewstestapp.data.di
 
 import com.fernandoherrera.hackernewstestapp.data.api.HackerNewsService
-import com.fernandoherrera.hackernewstestapp.data.mapper.MapHitResponseToDomain
-import com.fernandoherrera.hackernewstestapp.domain.HackerNewsRepository
+import com.fernandoherrera.hackernewstestapp.data.datasource.HackerNewsLocalDataSource
 import com.fernandoherrera.hackernewstestapp.data.repository.HackerNewsRepositoryImpl
+import com.fernandoherrera.hackernewstestapp.domain.HackerNewsRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,8 +36,9 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideHackerNewsRepository(
-        hackerNewsService: HackerNewsService
+        hackerNewsService: HackerNewsService,
+        localDataSource: HackerNewsLocalDataSource
     ): HackerNewsRepository {
-        return HackerNewsRepositoryImpl(hackerNewsService)
+        return HackerNewsRepositoryImpl(hackerNewsService,localDataSource)
     }
 }

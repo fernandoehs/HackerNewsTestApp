@@ -1,6 +1,5 @@
 package com.fernandoherrera.hackernewstestapp.domain.model
 
-
 data class Hit(
     val objectId: String,
     val storyTitle: String?,

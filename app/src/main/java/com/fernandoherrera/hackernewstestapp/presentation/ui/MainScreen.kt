@@ -17,11 +17,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-//import com.fernandoherrera.hackernewstestapp.domain.model.Hit
-import com.fernandoherrera.hackernewstestapp.data.model.remote.HitResponse
 import com.fernandoherrera.hackernewstestapp.domain.model.Hit
 
-//import com.fernandoherrera.hackernewstestapp.data.model.remote.HitResponse
 
 @Composable
 fun MainScreen(
@@ -29,7 +26,6 @@ fun MainScreen(
     onDeletedNewsItem: (Hit) -> Unit
 ) {
     val viewModel: HackerNewsViewModel = hiltViewModel()
-    //val news by viewModel.news.collectAsState()
     val news by viewModel.articles.collectAsState()
 
 
