@@ -1,6 +1,5 @@
 package com.fernandoherrera.hackernewstestapp.data.datasource
 
-
 import com.fernandoherrera.hackernewstestapp.data.dao.HitDao
 import com.fernandoherrera.hackernewstestapp.data.model.local.HitEntity
 import kotlinx.coroutines.Dispatchers
@@ -11,14 +10,14 @@ class HackerNewsLocalDataSourceImpl @Inject constructor(
     private val hitDao: HitDao
 ) : HackerNewsLocalDataSource {
 
-    override suspend fun getLocalHits(): List<HitEntity> {
+    override suspend fun getLocalHits(deletedIds: MutableSet<String>): List<HitEntity> {
         return withContext(Dispatchers.IO) {
-            hitDao.getHits()
+            hitDao.getAllHits(deletedIds)
         }
     }
 
-    override suspend fun getRemotedHits(): List<HitEntity> {
-        return hitDao.getHits()
+    override suspend fun getRemotedHits(deletedIds: MutableSet<String>): List<HitEntity> {
+        return hitDao.getAllHits(deletedIds)
     }
 
     override suspend fun clearLocalHits() {
@@ -26,7 +25,6 @@ class HackerNewsLocalDataSourceImpl @Inject constructor(
     }
 
     override suspend fun insertHits(hits: List<HitEntity>) {
-        //val removedHits = database.getHitDao().deleteAll()
 //        if (removedHits.isNotEmpty()) {
 //            hits.filter {
 //                removedHits.contains(RemovedHitEntity(it.objectId)).not()
@@ -35,8 +33,13 @@ class HackerNewsLocalDataSourceImpl @Inject constructor(
         hitDao.insertAll(hits)
     }
 
-    override suspend fun removeItemById(hitObjectId: String): Boolean {
-        TODO("Not yet implemented")
+    override suspend fun removeItemById(hit: HitEntity) {
+       hitDao.deleteArticle(hit)
     }
+
+//    override suspend fun removeItemById(hit: HitEntity) {
+//        deletedItems.add(hit.objectId)
+//        hitDao.deleteHit(hit)
+//    }
 
 }

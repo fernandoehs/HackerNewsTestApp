@@ -6,6 +6,7 @@ import com.fernandoherrera.hackernewstestapp.data.datasource.HackerNewsLocalData
 import com.fernandoherrera.hackernewstestapp.data.mapper.MapHitEntityToHit
 import com.fernandoherrera.hackernewstestapp.data.mapper.MapHitResponseToDomain
 import com.fernandoherrera.hackernewstestapp.data.mapper.MapHitResponseToEntity
+import com.fernandoherrera.hackernewstestapp.data.mapper.MapHitToEntity
 import com.fernandoherrera.hackernewstestapp.data.model.local.HitEntity
 import com.fernandoherrera.hackernewstestapp.domain.HackerNewsRepository
 import com.fernandoherrera.hackernewstestapp.domain.model.Hit
@@ -24,26 +25,32 @@ class HackerNewsRepositoryImpl @Inject constructor(
     private val mapHitResponseToDomain = MapHitResponseToDomain()
     private val mapHitResponseToEntity = MapHitResponseToEntity()
     private val mapHitEntityToHit = MapHitEntityToHit()
-
+    private val mapHitToEntity = MapHitToEntity()
+    private val deletedItems = mutableSetOf<String>()
     @SuppressLint("SuspiciousIndentation")
-    override suspend fun allHits(): Flow<Hit> = flow {
+    override suspend fun getAllHits(): Flow<Hit> = flow {
         try {
-            val remoteHits = hackerNewsService.fetchArticles().articles
             val hitEntities = mutableListOf<HitEntity>()
+            val remoteHits = hackerNewsService.fetchArticles().articles
 
             remoteHits.forEach { hitResponse ->
                 val domainHit = mapHitResponseToDomain.map(hitResponse)
-                emit(domainHit)
+                val hitEntity = mapHitResponseToEntity.map(hitResponse)
 
-                val entityHit = mapHitResponseToEntity.map(hitResponse)
-                hitEntities.add(entityHit)
-                localDataSource.insertHits(hitEntities)
+                if (!hitEntities.contains(hitEntity) ){
+                    if (!deletedItems.contains(hitEntity.objectId)){
+                        emit(domainHit)
+                        hitEntities.add(hitEntity)
+                    }
+                }
             }
+            localDataSource.insertHits(hitEntities)
 
         } catch (e: Exception) {
-            val localHits = localDataSource.getLocalHits()
+            val localHits = localDataSource.getLocalHits(deletedItems)
             if (localHits.isNotEmpty()) {
                 localHits.forEach { hitEntity ->
+
                     emit(mapHitEntityToHit.map(hitEntity))
                 }
             } else {
@@ -52,8 +59,9 @@ class HackerNewsRepositoryImpl @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
-
-    override suspend fun removeItemById(hitObjectId: String): Boolean {
-        TODO("Not yet implemented")
+    override suspend fun removeItemById(hit: Hit) {
+        deletedItems.add(mapHitToEntity.map(hit).objectId)
+        localDataSource.removeItemById(mapHitToEntity.map(hit))
     }
+
 }

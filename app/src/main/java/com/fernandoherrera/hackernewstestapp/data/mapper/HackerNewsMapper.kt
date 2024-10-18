@@ -39,3 +39,15 @@ class MapHitResponseToDomain : Mapper<HitResponse, Hit> {
         )
     }
 }
+
+class MapHitToEntity : Mapper<Hit, HitEntity> {
+    override fun map(from: Hit): HitEntity {
+        return HitEntity(
+            objectId = from.objectId,
+            storyTitle = from.storyTitle,
+            author = from.author,
+            createdAt = from.createdAt,
+            storyUrl = from.storyUrl
+        )
+    }
+}

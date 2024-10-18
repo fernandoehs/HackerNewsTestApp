@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fernandoherrera.hackernewstestapp.data.model.local.HitEntity
 import com.fernandoherrera.hackernewstestapp.domain.HackerNewsRepository
 import com.fernandoherrera.hackernewstestapp.domain.model.Hit
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,8 +32,12 @@ class HackerNewsViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                repository.allHits().collect { hit ->
-                    _articles.value = _articles.value + hit
+                repository.getAllHits().collect { hit ->
+                    if (_articles.value.contains(hit)){
+                        _articles.value = _articles.value
+                    }else{
+                        _articles.value = _articles.value + hit
+                    }
                 }
             } catch (e: Exception) {
                 Log.e("HackerNewsRepository", "Error al obtener hits", e)
@@ -41,21 +46,16 @@ class HackerNewsViewModel @Inject constructor(
             }
         }
     }
-//    private fun fetchArticles() {
-//        state = state.copy(
-//            isLoading = true
-//        )
-//        viewModelScope.launch {
-//            repository.allHits().collect{ hit ->
-//                _articles.value = _articles.value + hit
-//            }
-//            state = state.copy(
-//                isLoading = false
-//            )
-//        }
-//    }
 
-    fun deleteArticle(newItem: Hit) {
-        _articles.value = _articles.value.filter { it != newItem }
+    private fun deleteHit(hit: Hit) {
+        viewModelScope.launch {
+            repository.removeItemById(hit)
+            fetchArticles()
+        }
+    }
+
+    fun deleteArticle(hit: Hit) {
+        _articles.value = _articles.value.filter { it != hit }
+        deleteHit(hit)
     }
 }

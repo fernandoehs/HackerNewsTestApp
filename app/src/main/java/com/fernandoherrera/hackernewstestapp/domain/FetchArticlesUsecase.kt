@@ -8,6 +8,6 @@ class FetchArticlesUseCase @Inject constructor(
     private val repository: HackerNewsRepository
 ) {
     suspend operator fun invoke(): Flow<Hit> {
-        return repository.allHits()
+        return repository.getAllHits()
     }
 }

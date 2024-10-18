@@ -10,5 +10,5 @@ data class HitEntity(
     val storyTitle: String?,
     val author: String,
     val createdAt: String,
-    val storyUrl: String
+    val storyUrl: String?
 )

@@ -9,6 +9,6 @@ data class HitResponse(
     @SerializedName("title") val title: String?,
     @SerializedName("author") val author: String,
     @SerializedName("created_at") val createdAt: String,
-    @SerializedName("story_url") val url: String,
+    @SerializedName("story_url") val url: String?,
 )
 
